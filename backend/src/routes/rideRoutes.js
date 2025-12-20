@@ -29,6 +29,41 @@ router.post('/create', async (req, res) => {
   }
 });
 
+// Get co-passengers for a specific ride (people who have booked the same route)
+router.get('/:rideId/co-passengers', async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const ride = await Ride.findById(rideId);
+    
+    if (!ride) {
+      return res.status(404).json({ message: 'Ride not found', passengers: [] });
+    }
+
+    // Find all bookings for this specific ride
+    const bookings = await Booking.find({ rideId }).populate('userId', 'name phone email');
+
+    // Format passenger data
+    const passengers = bookings
+      .filter(booking => booking.userId) // Ensure userId exists
+      .map(booking => ({
+        _id: booking.userId._id,
+        name: booking.userId.name || 'Passenger',
+        phone: booking.userId.phone || 'Not available',
+        email: booking.userId.email,
+        source: booking.source || ride.source,
+        destination: booking.destination || ride.destination,
+        pickupLocation: booking.pickupLocation || booking.source || ride.source,
+        dropLocation: booking.dropLocation || booking.destination || ride.destination,
+        bookingId: booking._id
+      }));
+
+    res.json({ passengers, count: passengers.length });
+  } catch (err) {
+    console.error('Error fetching co-passengers:', err);
+    res.status(500).json({ message: 'Failed to fetch co-passengers', passengers: [] });
+  }
+});
+
 export default router;
 
 // Add booking endpoint here to ensure /api/rides/book is available via the rides router too
@@ -75,7 +110,19 @@ router.post('/book', async (req, res) => {
     ride.remainingSeats -= 1;
     await ride.save();
 
-    const booking = new Booking({ userId, rideId, source: ride.source, destination: ride.destination, fare: ride.fare, driver: ride.driver });
+    // Extract co-passenger preferences from request
+    const { shareRide, coPassengers } = req.body;
+
+    const booking = new Booking({ 
+      userId, 
+      rideId, 
+      source: ride.source, 
+      destination: ride.destination, 
+      fare: ride.fare, 
+      driver: ride.driver,
+      shareRide: shareRide || false,
+      coPassengers: coPassengers || []
+    });
     await booking.save();
 
     res.json({ message: 'Ride booked', booking, ride: { source: ride.source, destination: ride.destination, fare: ride.fare, driver: ride.driver, remainingSeats: ride.remainingSeats } });

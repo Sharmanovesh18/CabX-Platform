@@ -20,6 +20,20 @@ const rides = [
     availableSeats: 3
   },
   {
+    source: "Rajpura",
+    destination: "Chandigarh",
+    date: today,
+    time: "13:00",
+    fare: 500,
+    driver: {
+      name: "Sunil Verma",
+      phone: "9876541230",
+      rating: 4.7
+    },
+    vehicleType: "Scorpio",
+    availableSeats: 4
+  },
+  {
     source: "Gumthala",
     destination: "Chandigarh",
     date: today,

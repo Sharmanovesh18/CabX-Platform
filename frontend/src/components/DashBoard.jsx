@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import './DashBoard.css';
 import { useNavigate } from 'react-router-dom';
+import CoPassengerModal from './CoPassengerModal';
 // This is a single-file React app, so all components and logic are here.
 // No separate files are needed for this project.
 
@@ -83,6 +84,8 @@ const DashBoard = () => {
   const [bookingLoading, setBookingLoading] = useState(false);
   const [bookingRideId, setBookingRideId] = useState(null);
   const [message, setMessage] = useState(null);
+  const [coPassengerModalOpen, setCoPassengerModalOpen] = useState(false);
+  const [selectedRideForBooking, setSelectedRideForBooking] = useState(null);
 
   const todayDate = new Date().toISOString().split('T')[0];
 
@@ -136,11 +139,24 @@ const DashBoard = () => {
   };
 
   const handleBook = async (rideIdParam) => {
-  setBookingLoading(true);
+    // First, show co-passenger selection modal
+    const ride = rides.find(r => r._id === rideIdParam);
+    if (ride) {
+      setSelectedRideForBooking(ride);
+      setCoPassengerModalOpen(true);
+    }
+  };
 
-  // support both _id and id, and ensure rideId passed correctly
-  const rideId = (rideIdParam !== undefined && rideIdParam !== null) ? rideIdParam : null;
-  setBookingRideId(rideId);
+  const handleCoPassengerProceed = async (coPassengerData) => {
+    // Close the modal and proceed with booking
+    setCoPassengerModalOpen(false);
+    const rideIdParam = selectedRideForBooking?._id;
+    
+    setBookingLoading(true);
+
+    // support both _id and id, and ensure rideId passed correctly
+    const rideId = (rideIdParam !== undefined && rideIdParam !== null) ? rideIdParam : null;
+    setBookingRideId(rideId);
 
   // derive logged-in user's token from localStorage (AuthModal stores 'currentUser')
   const stored = JSON.parse(localStorage.getItem('currentUser')) || {};
@@ -156,7 +172,11 @@ const DashBoard = () => {
       },
       // ✅ include credentials if backend uses cookies/sessions
       credentials: "include",
-      body: JSON.stringify({ rideId })
+      body: JSON.stringify({ 
+        rideId,
+        shareRide: coPassengerData.shareRide,
+        coPassengers: coPassengerData.selectedPassengers
+      })
     });
 
     if (!rideBookingResponse.ok) {
@@ -374,6 +394,17 @@ const DashBoard = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {coPassengerModalOpen && selectedRideForBooking && (
+        <CoPassengerModal
+          ride={selectedRideForBooking}
+          onClose={() => {
+            setCoPassengerModalOpen(false);
+            setSelectedRideForBooking(null);
+          }}
+          onProceed={handleCoPassengerProceed}
+        />
       )}
 
       {bookingPopup && (

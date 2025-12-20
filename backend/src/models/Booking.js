@@ -11,6 +11,10 @@ const bookingSchema = new mongoose.Schema({
     rating: { type: Number },
   },
   bookingDate: { type: Date, default: Date.now },
+  shareRide: { type: Boolean, default: false },
+  coPassengers: [{ type: String }], // Array of user IDs of selected co-passengers
+  pickupLocation: { type: String }, // Optional: specific pickup point
+  dropLocation: { type: String }, // Optional: specific drop point
 });
 
 export default mongoose.model('Booking', bookingSchema);

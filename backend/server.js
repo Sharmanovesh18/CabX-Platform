@@ -474,6 +474,9 @@ app.post("/api/rides/book", async (req, res) => {
     ride.remainingSeats -= 1;
     await ride.save();
 
+    // Extract co-passenger preferences from request
+    const { shareRide, coPassengers } = req.body;
+
     const booking = new Booking({
       userId,
       rideId,
@@ -484,6 +487,8 @@ app.post("/api/rides/book", async (req, res) => {
         name: ride.driver.name,
         rating: ride.driver.rating,
       },
+      shareRide: shareRide || false,
+      coPassengers: coPassengers || []
     });
     await booking.save();
 
