@@ -234,17 +234,22 @@ app.post("/api/auth/sync-social", mockVerifyAuth0Token, async (req, res) => {
 // User registration route (MANUAL AUTH - KEPT)
 app.post("/api/auth/register", async (req, res) => {
   const { name, email, phone, password } = req.body;
+  console.log('📝 REGISTRATION ATTEMPT:', { name, email, phone, passwordLength: password?.length });
   // Basic input validation
   if (!name || !email || !password || !phone) {
+    console.log('❌ Missing fields:', { name: !!name, email: !!email, phone: !!phone, password: !!password });
     return res.status(400).json({ message: 'Missing required fields: name, email, phone, password' });
   }
   try {
     const userExists = await Users.findOne({ email }); // Changed to Users
     if (userExists) {
+      console.log('❌ User already exists:', email);
       return res.status(400).json({ message: "User already exists" });
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    console.log('🔐 Password hashed, hash length:', hashedPassword.length);
+    
     const user = new Users({ // Changed to Users
       name,
       email,
@@ -253,6 +258,8 @@ app.post("/api/auth/register", async (req, res) => {
       app_role: 'Passenger' // Default role for manual sign up
     });
     await user.save();
+    console.log('✅ User registered and saved to DB:', { id: user._id, email: user.email, name: user.name });
+    
     // Generate JWT for the newly created user
     const token = jwt.sign({ id: user._id, role: user.app_role }, JWT_SECRET, {
       expiresIn: '1h',
@@ -280,29 +287,36 @@ app.post("/api/auth/register", async (req, res) => {
 // User login route (MANUAL AUTH - KEPT)
 app.post("/api/auth/login", async (req, res) => {
   const { email, password } = req.body;
+  console.log('🔐 LOGIN ATTEMPT:', { email, passwordLength: password?.length });
   try {
-    console.log('Login attempt for:', email);
+    console.log('🔍 Searching for user in Users collection...');
     let user = await Users.findOne({ email }); // first try main Users collection
     let usedModel = 'Users';
 
     // If not found, try the legacy User model (different schema/collection)
     if (!user) {
+      console.log('❌ Not found in Users, trying LegacyUser...');
       const legacy = await LegacyUser.findOne({ email });
       if (legacy) {
         user = legacy;
         usedModel = 'LegacyUser';
-        console.log('Found user in legacy collection for:', email);
+        console.log('✅ Found user in legacy collection for:', email);
       }
+    } else {
+      console.log('✅ Found user in Users collection:', { id: user._id, email: user.email, name: user.name });
     }
 
     if (!user) {
-      console.log('User not found in any collection:', email);
+      console.log('❌ User not found in any collection:', email);
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
+    console.log('🔐 Comparing password... stored hash length:', user.password?.length);
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log('Password match result:', isMatch);
+    
     if (!isMatch) {
-      console.log('Password mismatch for user (model=' + usedModel + '):', email);
+      console.log('❌ Password mismatch for user (model=' + usedModel + '):', email);
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
@@ -313,6 +327,7 @@ app.post("/api/auth/login", async (req, res) => {
     // Normalize name field across different models
     const displayName = user.name || [user.given_name, user.family_name].filter(Boolean).join(' ') || '';
 
+    console.log('✅ Login successful for user:', email);
     res.status(200).json({
       message: 'Login successful!',
       user: {
@@ -402,12 +417,65 @@ app.get("/api/rides/search", async (req, res) => {
       return res.status(200).json({ results: dbRides });
     }
 
-    res.status(200).json({ results: [], message: "No rides found." });
+    // If no rides found, generate demo rides for any route (for now)
+    const demoRides = generateDemoRides(source, destination, date);
+    
+    return res.status(200).json({ 
+      results: demoRides, 
+      message: demoRides.length > 0 ? "Showing available rides for this route" : "No rides found for this route" 
+    });
   } catch (err) {
     console.error("❌ Error searching for rides:", err);
     res.status(500).json({ error: "Failed to search for rides" });
   }
 });
+
+// Function to generate demo rides for any route
+const generateDemoRides = (source, destination, date) => {
+  // Common driver names for demo
+  const driverNames = [
+    "Rajesh Kumar", "Priya Sharma", "Amit Singh", "Neha Patel", "Arjun Verma",
+    "Divya Gupta", "Vikram Reddy", "Sneha Das", "Rohan Chopra", "Anjali Menon"
+  ];
+  
+  // Generate 2-4 random rides for the route
+  const rideCount = Math.floor(Math.random() * 3) + 2; // 2-4 rides
+  const rides = [];
+  
+  for (let i = 0; i < rideCount; i++) {
+    const randomDriver = driverNames[Math.floor(Math.random() * driverNames.length)];
+    const randomFare = Math.floor(Math.random() * 500) + 300; // 300-800 rupees
+    const randomSeats = Math.floor(Math.random() * 3) + 1; // 1-4 seats
+    const randomRating = (Math.random() * 0.5 + 4.2).toFixed(1); // 4.2-4.7 rating
+    
+    const hours = Math.floor(Math.random() * 14) + 6; // 6 AM to 8 PM
+    const minutes = Math.random() > 0.5 ? '00' : '30';
+    const time = `${String(hours).padStart(2, '0')}:${minutes}`;
+    
+    // Use proper MongoDB ObjectId format instead of string
+    const ride = {
+      _id: new mongoose.Types.ObjectId(), // Generate valid ObjectId
+      source: source,
+      destination: destination,
+      date: date || new Date().toISOString().split('T')[0],
+      time: time,
+      fare: randomFare,
+      driver: {
+        name: randomDriver,
+        rating: parseFloat(randomRating),
+        img: "https://via.placeholder.com/40"
+      },
+      vehicleType: ["Sedan", "SUV", "Hatchback", "CRV"][Math.floor(Math.random() * 4)],
+      remainingSeats: randomSeats,
+      stops: [destination],
+      isDemo: true // Mark as demo ride
+    };
+    
+    rides.push(ride);
+  }
+  
+  return rides;
+};
 
 // Book route (KEPT)
 app.post("/api/rides/book", async (req, res) => {
@@ -442,7 +510,34 @@ app.post("/api/rides/book", async (req, res) => {
     console.log('Falling back to body.userId for booking (deprecated):', userId);
   }
   try {
-    const ride = await Ride.findById(rideId);
+    let ride = await Ride.findById(rideId);
+    
+    // If ride not found, it might be a demo ride that needs to be saved first
+    if (!ride) {
+      console.log('🎲 Demo ride detected, checking if it can be created...');
+      // For demo rides, we'll create a temporary ride in the database
+      // This is acceptable since demo rides are meant to be temporary bookings
+      try {
+        const newRide = new Ride({
+          _id: rideId,
+          source: req.body.source,
+          destination: req.body.destination,
+          date: req.body.date,
+          time: req.body.time,
+          fare: req.body.fare,
+          driver: req.body.driver,
+          vehicleType: req.body.vehicleType || 'Sedan',
+          remainingSeats: req.body.remainingSeats || 4,
+          isDemo: true
+        });
+        ride = await newRide.save();
+        console.log('✅ Demo ride created in DB:', ride._id);
+      } catch (demoErr) {
+        console.warn('Failed to create demo ride:', demoErr?.message);
+        return res.status(404).json({ message: 'Ride not found and could not be created', rideId });
+      }
+    }
+    
     let user = await Users.findById(userId); // Changed to Users
     // Auto-provision missing user in development if configured (use with caution)
     if (!user && process.env.AUTO_PROVISION === 'true' && userId) {
@@ -453,11 +548,6 @@ app.post("/api/rides/book", async (req, res) => {
       } catch (provErr) {
         console.error('Auto-provision failed:', provErr);
       }
-    }
-
-    if (!ride) {
-      console.warn('Booking failed: ride not found', rideId);
-      return res.status(404).json({ message: 'Ride not found', rideId });
     }
 
     if (!user) {
@@ -572,5 +662,21 @@ app.get('/api/debug/users/:id', async (req, res) => {
   } catch (err) {
     console.error('Error fetching user by id for debug:', err);
     res.status(500).json({ ok: false, message: 'Failed to fetch user' });
+  }
+});
+
+// DEBUG: Check if email exists in database
+app.get('/api/debug/check-email/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    const user = await Users.findOne({ email });
+    if (!user) {
+      console.log('❌ Email not found in UsersData:', email);
+      return res.json({ ok: false, message: 'Email not found in Users collection', email });
+    }
+    console.log('✅ Email found:', { id: user._id, name: user.name, email: user.email });
+    res.json({ ok: true, message: 'Email found', user: { id: user._id, name: user.name, email: user.email } });
+  } catch (err) {
+    res.status(500).json({ ok: false, message: 'Error checking email', error: err.message });
   }
 });

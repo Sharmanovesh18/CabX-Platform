@@ -174,6 +174,15 @@ const DashBoard = () => {
         credentials: "include",
         body: JSON.stringify({
           rideId,
+          // Send complete ride data for demo rides that might not exist in DB yet
+          source: selectedRideForBooking.source,
+          destination: selectedRideForBooking.destination,
+          date: selectedRideForBooking.date,
+          time: selectedRideForBooking.time,
+          fare: selectedRideForBooking.fare,
+          driver: selectedRideForBooking.driver,
+          vehicleType: selectedRideForBooking.vehicleType,
+          remainingSeats: selectedRideForBooking.remainingSeats,
           shareRide: coPassengerData.shareRide,
           coPassengers: coPassengerData.selectedPassengers
         })
