@@ -9,12 +9,13 @@ body {
   width: 100%;
   margin: auto;
   min-height: 100vh;
-  /* background: linear-gradient(135deg, #19355f, #c3cfe2); */
+  background: linear-gradient(135deg, #a8c0ff 0%, #b8d4ff 100%);
+  border: 2px solid rgba(255, 255, 255, 0.5);
 }
 
 .ride-card-gradient {
-  background: linear-gradient(135deg, #5acfc7, #cb8cd3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 25%, #fd79a8 50%, #a29bfe 75%, #fdcb6e 100%);
+  border: 2px solid rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
 }
 
@@ -26,32 +27,39 @@ body {
   align-items: center;
   margin-bottom: 20px;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fce4ec 100%);
   backdrop-filter: blur(10px);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
-.dashboard-form-controls input,
-.dashboard-form-controls button {
+.dashboard-form-controls input {
   padding: 12px;
-  border: 1px solid #ccc;
+  border: 2px solid #a8c0ff;
   border-radius: 4px;
   font-size: 16px;
   flex: 1 1 200px;
 }
 
 .dashboard-form-controls button {
-  background-color: #007bff;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  flex: 1 1 200px;
+}
+
+.dashboard-form-controls button {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
   color: white;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.8);
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .dashboard-form-controls button:hover {
-  background-color: #0056b3;
+  background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+  transform: translateY(-2px);
 }
 
 .swap-icon {
@@ -65,7 +73,7 @@ body {
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
 .ride-details h2 {
@@ -81,7 +89,7 @@ body {
   padding: 20px;
   margin-bottom: 15px;
   transition: transform 0.2s;
-  border: 1px solid #e0e0e0;
+  border: 2px solid #a8c0ff;
 }
 
 .ride-card:hover {
@@ -139,10 +147,18 @@ body {
 }
 
 .driver-avatar img {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.driver-avatar img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .avatar-blank {
