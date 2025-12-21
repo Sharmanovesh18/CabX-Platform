@@ -33,6 +33,15 @@
   margin: 0 auto;
   padding: 20px;
   flex: 1;
+  background: linear-gradient(135deg, #a8c0ff 0%, #b8d4ff 100%);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.ride-card-gradient {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 25%, #fd79a8 50%, #a29bfe 75%, #fdcb6e 100%);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+
 }
 
 .page-title {
@@ -49,6 +58,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+
   gap: 12px;
   background-color: var(--card-bg);
   padding: 24px;
@@ -59,6 +69,21 @@
 }
 
 .dashboard-form-controls input.inputText {
+
+  margin-bottom: 20px;
+  padding: 20px;
+  background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fce4ec 100%);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+.dashboard-form-controls input {
+  padding: 12px;
+  border: 2px solid #a8c0ff;
+  border-radius: 4px;
+  font-size: 16px;
   flex: 1 1 200px;
   background-color: var(--input-bg) !important;
   color: var(--text-primary) !important;
@@ -83,6 +108,24 @@
 .dashboard-form-controls input[type="date"],
 .dashboard-form-controls input[type="time"] {
   color-scheme: dark;
+}.dashboard-form-controls button {
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 16px;
+  flex: 1 1 200px;
+}
+
+.dashboard-form-controls button {
+  background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.dashboard-form-controls button:hover {
+  background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%);
+  transform: translateY(-2px);
 }
 
 .swap-icon {
@@ -97,6 +140,14 @@
 .swap-icon:hover {
   background-color: #333;
   color: var(--text-primary);
+}
+.ride-details {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
 .dashboard-form-controls button,
@@ -200,6 +251,9 @@
    I'll make it a very subtle dark gradient for "Ride" feel. */
 .ride-card-gradient {
   background: linear-gradient(145deg, rgba(29, 39, 58, 0.8), rgba(20, 27, 43, 0.9));
+  margin-bottom: 15px;
+  transition: transform 0.2s;
+  border: 2px solid #a8c0ff;
 }
 
 .ride-card:hover {
@@ -250,6 +304,7 @@
   color: var(--text-secondary);
 }
 
+
 .driver-avatar img,
 .avatar-blank {
   width: 32px;
@@ -257,6 +312,20 @@
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--border-color);
+}
+.driver-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #007bff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.driver-avatar img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .avatar-blank {
