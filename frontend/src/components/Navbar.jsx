@@ -17,7 +17,7 @@ function Navbar() {
       setCurrentUser(updatedUser);
     };
 
-    // window.addEventListener("auth-changed", handleAuthChange);
+    window.addEventListener("auth-changed", handleAuthChange);
 
     return () => {
       window.removeEventListener("auth-changed", handleAuthChange);

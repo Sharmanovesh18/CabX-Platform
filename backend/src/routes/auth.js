@@ -16,18 +16,22 @@ router.post("/register", async (req, res) => {
       return res.status(400).json({ message: "All fields are required (name, email, phone, password)" });
     }
 
+    // Normalize email: trim whitespace and convert to lowercase
+    const trimmedEmail = email.trim().toLowerCase();
+
     // check if user exists
-    const existingUser = await Users.findOne({ email });
+    const existingUser = await Users.findOne({ email: trimmedEmail });
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log("Password hashed successfully, hash length:", hashedPassword.length);
 
     const newUser = new Users({
       name,
-      email,
+      email: trimmedEmail,
       phone,
       password: hashedPassword,
     });
@@ -67,21 +71,34 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Email and password are required" });
     }
 
+    // Trim whitespace from email
+    const trimmedEmail = email.trim().toLowerCase();
+    
     // find user by email
-    const user = await Users.findOne({ email });
+    const user = await Users.findOne({ email: trimmedEmail });
+    console.log("User lookup result:", user ? "Found" : "Not found", "for email:", trimmedEmail);
+    
     if (!user) {
-      console.log("User not found:", email);
+      console.log("User not found:", trimmedEmail);
+      // Let's check if the email exists with different casing
+      const userAnyCase = await Users.findOne({ email: new RegExp(`^${email}$`, 'i') });
+      console.log("Case-insensitive search:", userAnyCase ? "Found user with different casing" : "Still not found");
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    console.log("Stored password hash:", user.password ? user.password.substring(0, 20) + "..." : "MISSING");
+    console.log("Password to compare:", password ? "***provided***" : "MISSING");
+    
     // compare passwords
     const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Password comparison result:", isMatch);
+    
     if (!isMatch) {
-      console.log("Password mismatch for user:", email);
+      console.log("Password mismatch for user:", trimmedEmail);
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    console.log("Login successful for user:", email);
+    console.log("Login successful for user:", trimmedEmail);
     
     // Generate JWT token
     const token = jwt.sign({ id: user._id, role: 'Passenger' }, JWT_SECRET, {

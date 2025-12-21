@@ -77,7 +77,7 @@ const localRides = [
     },
     vehicleType: "Sedan",
     remainingSeats: 1,
-    stops: ["Gurgaon"],
+    stops: ["Chandigarh"],
   }
 ];
 
