@@ -36,7 +36,7 @@ export default function MapPage(){
 
   const fetchRoute = async () => {
     if(!origin || !destination) return alert('choose origin & destination');
-    const resp = await axios.post('http://localhost:5000/api/directions', {
+    const resp = await axios.post('http://localhost:5001/api/directions', {
       origin: origin.place || `${origin.lat},${origin.lng}`,
       destination: destination.place || `${destination.lat},${destination.lng}`,
       travelMode: 'DRIVING'

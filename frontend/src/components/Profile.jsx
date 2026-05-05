@@ -23,7 +23,7 @@ function Profile() {
         // optimistic: show stored data first if available
         setUser(currentUser);
         if (!currentUser.token) return;
-        const res = await axios.get('http://localhost:5000/api/auth/profile', {
+        const res = await axios.get('http://localhost:5001/api/auth/profile', {
           headers: { Authorization: `Bearer ${currentUser.token}` }
         });
         if (res?.data) {

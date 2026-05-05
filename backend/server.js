@@ -15,7 +15,6 @@ import localRides from "./src/data/localRides.js";
 import Ride from "./src/models/Ride.js";
 import Booking from "./src/models/Booking.js";
 import Users from "./src/models/Users.js"; // This is the updated import
-import LegacyUser from "./models/User.js"; // Legacy/alternate user model (compat)
 
 import rideRoutes from "./src/routes/rideRoutes.js";
 import bookingRoutes from "./src/routes/bookingRoutes.js";
@@ -23,6 +22,7 @@ import Location from "./src/models/Location.js";
 
 import userRoutes from "./routes/userRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import distanceRoutes from "./src/routes/distanceRoutes.js";
 import connectDB from "./config/db.js";
 
 
@@ -72,39 +72,45 @@ mongoose
 // Initial data seeding function
 const seedData = async () => {
   try {
-    await Ride.deleteMany({});
-    await Booking.deleteMany({});
-    await Users.deleteMany({}); // Changed to Users
-    await Ride.insertMany(localRides);
-    console.log("✅ Database seeded with initial data.");
+    // Only seed if collections are empty to maintain persistence
+    const rideCount = await Ride.countDocuments();
+    if (rideCount === 0) {
+        await Ride.insertMany(localRides);
+        console.log("✅ Database seeded with initial rides.");
+    }
 
-    // Create a sample user for testing
-    const sampleUserEmail = "johndoe@example.com";
-    const sampleUserPassword = "password123";
+    const adminExists = await Users.findOne({ email: "admin@saarthi.com" });
+    if (!adminExists) {
+        // Create a sample admin for testing
+        const adminEmail = "admin@saarthi.com";
+        const adminPassword = "admin123";
 
-    // Hash the password for the sample user
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(sampleUserPassword, salt);
+        // Hash the passwords
+        const salt = await bcrypt.genSalt(10);
+        const hashedAdminPassword = await bcrypt.hash(adminPassword, salt);
 
-    // Create a new sample user with all required fields
-    const sampleUser = new Users({ // Changed to Users
-        _id: "66d30d3ad4b0c9241c9d4a11",
-        name: "John Doe",
-        email: sampleUserEmail,
-        phone: "123-456-7890",
-        password: hashedPassword,
-    });
+        // Create a new admin user
+        const adminUser = new Users({
+            name: "Platform Admin",
+            email: adminEmail,
+            phone: "999-888-7777",
+            password: hashedAdminPassword,
+            role: "Admin"
+        });
 
-    await sampleUser.save();
-    console.log("✅ Sample user created.");
+        await adminUser.save();
+        console.log("✅ Admin user created.");
+    }
   } catch (err) {
     console.error("❌ Error seeding data:", err);
   }
 };
 
-app.use('/api/users', userRoutes);
+app.use('/api/auth', userRoutes);
 // Reviews API
 app.use('/api/reviews', reviewRoutes);
+// Distance API
+app.use('/api/distance', distanceRoutes);
 
 // Payments: create Razorpay order and verify signature
 app.post('/api/payments/create-order', async (req, res) => {
@@ -231,118 +237,7 @@ app.post("/api/auth/sync-social", mockVerifyAuth0Token, async (req, res) => {
 });
 
 
-// User registration route (MANUAL AUTH - KEPT)
-app.post("/api/auth/register", async (req, res) => {
-  const { name, email, phone, password } = req.body;
-  console.log('📝 REGISTRATION ATTEMPT:', { name, email, phone, passwordLength: password?.length });
-  // Basic input validation
-  if (!name || !email || !password || !phone) {
-    console.log('❌ Missing fields:', { name: !!name, email: !!email, phone: !!phone, password: !!password });
-    return res.status(400).json({ message: 'Missing required fields: name, email, phone, password' });
-  }
-  try {
-    const userExists = await Users.findOne({ email }); // Changed to Users
-    if (userExists) {
-      console.log('❌ User already exists:', email);
-      return res.status(400).json({ message: "User already exists" });
-    }
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    console.log('🔐 Password hashed, hash length:', hashedPassword.length);
-    
-    const user = new Users({ // Changed to Users
-      name,
-      email,
-      phone,
-      password: hashedPassword,
-      app_role: 'Passenger' // Default role for manual sign up
-    });
-    await user.save();
-    console.log('✅ User registered and saved to DB:', { id: user._id, email: user.email, name: user.name });
-    
-    // Generate JWT for the newly created user
-    const token = jwt.sign({ id: user._id, role: user.app_role }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    // Return user profile (without password) and token
-    const userProfile = {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: user.app_role,
-    };
-
-    res.status(201).json({ message: "User registered successfully!", user: userProfile, token });
-  } catch (err) {
-    console.error("❌ Registration error:", err);
-    if (err.code === 11000) {
-      // duplicate key
-      return res.status(400).json({ message: 'Email already registered' });
-    }
-    res.status(500).json({ message: "Server error", error: err.message });
-  }
-});
-
-// User login route (MANUAL AUTH - KEPT)
-app.post("/api/auth/login", async (req, res) => {
-  const { email, password } = req.body;
-  console.log('🔐 LOGIN ATTEMPT:', { email, passwordLength: password?.length });
-  try {
-    console.log('🔍 Searching for user in Users collection...');
-    let user = await Users.findOne({ email }); // first try main Users collection
-    let usedModel = 'Users';
-
-    // If not found, try the legacy User model (different schema/collection)
-    if (!user) {
-      console.log('❌ Not found in Users, trying LegacyUser...');
-      const legacy = await LegacyUser.findOne({ email });
-      if (legacy) {
-        user = legacy;
-        usedModel = 'LegacyUser';
-        console.log('✅ Found user in legacy collection for:', email);
-      }
-    } else {
-      console.log('✅ Found user in Users collection:', { id: user._id, email: user.email, name: user.name });
-    }
-
-    if (!user) {
-      console.log('❌ User not found in any collection:', email);
-      return res.status(400).json({ message: 'Invalid email or password' });
-    }
-
-    console.log('🔐 Comparing password... stored hash length:', user.password?.length);
-    const isMatch = await bcrypt.compare(password, user.password);
-    console.log('Password match result:', isMatch);
-    
-    if (!isMatch) {
-      console.log('❌ Password mismatch for user (model=' + usedModel + '):', email);
-      return res.status(400).json({ message: 'Invalid email or password' });
-    }
-
-    const token = jwt.sign({ id: user._id, role: user.app_role || 'Passenger' }, JWT_SECRET, {
-      expiresIn: '1h',
-    });
-
-    // Normalize name field across different models
-    const displayName = user.name || [user.given_name, user.family_name].filter(Boolean).join(' ') || '';
-
-    console.log('✅ Login successful for user:', email);
-    res.status(200).json({
-      message: 'Login successful!',
-      user: {
-        id: user._id,
-        name: displayName,
-        email: user.email,
-        role: user.app_role || user.role || 'Passenger',
-      },
-      token,
-    });
-  } catch (err) {
-    console.error("❌ Login error:", err);
-    res.status(500).json({ message: "Server error" });
-  }
-});
+// Auth routes are now handled by userRoutes at /api/auth
 
 // Middleware to protect routes (optional but recommended)
 const protect = (req, res, next) => {
@@ -391,18 +286,6 @@ app.get("/api/rides/search", async (req, res) => {
   }
 
   try {
-    const localMatches = localRides.filter((ride) => {
-      const isMatch =
-        ride.source.toLowerCase() === source.toLowerCase() &&
-        ride.destination.toLowerCase() === destination.toLowerCase() &&
-        (ride.date === date || !date);
-      return isMatch;
-    });
-
-    if (localMatches.length > 0) {
-      return res.status(200).json({ results: localMatches });
-    }
-
     const query = {
       source: { $regex: new RegExp(`^${source}$`, "i") },
       destination: { $regex: new RegExp(`^${destination}$`, "i") },
@@ -413,16 +296,9 @@ app.get("/api/rides/search", async (req, res) => {
 
     const dbRides = await Ride.find(query);
 
-    if (dbRides.length > 0) {
-      return res.status(200).json({ results: dbRides });
-    }
-
-    // If no rides found, generate demo rides for any route (for now)
-    const demoRides = generateDemoRides(source, destination, date);
-    
     return res.status(200).json({ 
-      results: demoRides, 
-      message: demoRides.length > 0 ? "Showing available rides for this route" : "No rides found for this route" 
+      results: dbRides, 
+      message: dbRides.length > 0 ? "" : "No rides found for this route" 
     });
   } catch (err) {
     console.error("❌ Error searching for rides:", err);

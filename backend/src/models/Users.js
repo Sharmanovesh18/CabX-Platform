@@ -5,6 +5,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  given_name: {
+    type: String,
+  },
+  family_name: {
+    type: String,
+  },
   email: {
     type: String,
     required: true,
@@ -12,13 +18,22 @@ const userSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    required: true,
-    },
+  },
   password: {
     type: String,
-    required: true,
+    required: false, // Optional for social login users
   },
-});
+  role: {
+    type: String,
+    enum: ['User', 'Admin'],
+    default: 'User',
+  },
+  auth0_id: {
+    type: String,
+    unique: true,
+    sparse: true, // Allow multiple nulls
+  }
+}, { timestamps: true });
 
 const Users = mongoose.model("UsersData", userSchema);
 

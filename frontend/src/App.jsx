@@ -17,6 +17,7 @@ import Profile from "./components/Profile";
 import Payment from "./components/Payment";
 import HelpPage from "./components/HelpPage";
 import Driver from "./components/Driver";
+import AdminPanel from "./components/AdminPanel";
 
 function Layout({ children }) {
   const location = useLocation();
@@ -69,7 +70,7 @@ function App() {
           <Route path="/payment" element={<Payment />} />
           <Route path="/help" element={<HelpPage />} />
 
-          <Route path="/driver" element={<Driver />} />
+          <Route path="/admin" element={<AdminPanel />} />
         </Routes>
       </Layout>
     </Router>

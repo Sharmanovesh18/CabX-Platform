@@ -3,7 +3,7 @@
  * Handles all distance-related API calls
  */
 
-const DISTANCE_API_BASE = "http://localhost:5000/api/distance";
+const DISTANCE_API_BASE = "http://localhost:5001/api/distance";
 
 /**
  * Get distance and fare between two locations

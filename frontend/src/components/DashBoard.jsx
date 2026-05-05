@@ -3,10 +3,11 @@ import axios from "axios";
 import './DashBoard.css';
 import { useNavigate } from 'react-router-dom';
 import CoPassengerModal from './CoPassengerModal';
+import RideDetailsModal from './RideDetailsModal';
 // This is a single-file React app, so all components and logic are here.
 // No separate files are needed for this project.
 
-const TimedRideCard = ({ ride, onBook, onShare, bookingRideId, bookingLoading }) => {
+const TimedRideCard = ({ ride, onBook, onShare, onClick, bookingRideId, bookingLoading }) => {
   const [visible, setVisible] = useState(true);
 
   // Set a timer to hide the ride card after 20 seconds.
@@ -18,7 +19,7 @@ const TimedRideCard = ({ ride, onBook, onShare, bookingRideId, bookingLoading })
   if (!visible) return null;
 
   return (
-    <div className="ride-card ride-card-gradient">
+    <div className="ride-card ride-card-gradient" onClick={() => onClick(ride)} style={{ cursor: 'pointer' }}>
       <div className="ride-top-row">
         <span className="ride-time-main">{ride.startTime || ride.time}</span>
         <div className="ride-duration">
@@ -55,13 +56,19 @@ const TimedRideCard = ({ ride, onBook, onShare, bookingRideId, bookingLoading })
         <div className="booking-options">
           <span className="booking-type">⚡ {ride.bookingType || "Instant"}</span>
           <button
-            onClick={() => onBook(ride._id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onBook(ride._id);
+            }}
             disabled={bookingLoading && bookingRideId === ride._id}
           >
             {bookingLoading && bookingRideId === ride._id ? "Booking..." : "Book"}
           </button>
           {ride.stops?.includes(ride.destination) && (
-            <button onClick={() => onShare(ride._id)}>Agree</button>
+            <button onClick={(e) => {
+              e.stopPropagation();
+              onShare(ride._id);
+            }}>Agree</button>
           )}
         </div>
       </div>
@@ -86,6 +93,7 @@ const DashBoard = () => {
   const [message, setMessage] = useState(null);
   const [coPassengerModalOpen, setCoPassengerModalOpen] = useState(false);
   const [selectedRideForBooking, setSelectedRideForBooking] = useState(null);
+  const [selectedRideForDetails, setSelectedRideForDetails] = useState(null);
 
   const todayDate = new Date().toISOString().split('T')[0];
 
@@ -101,7 +109,7 @@ const DashBoard = () => {
     setMessage(null);
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/rides/search", {
+      const res = await axios.get("http://localhost:5001/api/rides/search", {
         params: {
           source: start,
           destination,
@@ -113,7 +121,7 @@ const DashBoard = () => {
       if (res.data.results.length === 0) {
         // If no matches for the requested date, try a relaxed search without date
         if (date) {
-          const fallback = await axios.get("http://localhost:5000/api/rides/search", {
+          const fallback = await axios.get("http://localhost:5001/api/rides/search", {
             params: { source: start, destination }
           });
           if ((fallback.data.results || []).length > 0) {
@@ -136,6 +144,10 @@ const DashBoard = () => {
       setMessage({ type: 'error', text: err.response?.data?.error || "Error searching for rides. Please try again later." });
     }
     setLoading(false);
+  };
+
+  const handleRideClick = (ride) => {
+    setSelectedRideForDetails(ride);
   };
 
   const handleBook = async (rideIdParam) => {
@@ -163,7 +175,7 @@ const DashBoard = () => {
     const token = stored?.token;
 
     try {
-      const rideBookingResponse = await fetch("http://localhost:5000/api/rides/book", {
+      const rideBookingResponse = await fetch("http://localhost:5001/api/rides/book", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -233,7 +245,7 @@ const DashBoard = () => {
   const bookingHistory = async () => {
     const userId = "66d30d3ad4b0c9241c9d4a11";
     try {
-      const res = await axios.get(`http://localhost:5000/api/bookings/history/${userId}`);
+      const res = await axios.get(`http://localhost:5001/api/bookings/history/${userId}`);
       setHistory(res.data);
     } catch (err) {
       console.error("Error fetching history:", err);
@@ -249,7 +261,7 @@ const DashBoard = () => {
   const handleShare = async (bookingId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/bookings/${bookingId}/share`,
+        `http://localhost:5001/api/bookings/${bookingId}/share`,
         { userId: "66d30d3ad4b0c9241c9d4a11" }
       );
       setSharedRide(res.data.data);
@@ -329,6 +341,7 @@ const DashBoard = () => {
                   ride={ride}
                   onBook={handleBook}
                   onShare={handleShare}
+                  onClick={handleRideClick}
                   bookingRideId={bookingRideId}
                   bookingLoading={bookingLoading}
                 />
@@ -397,6 +410,14 @@ const DashBoard = () => {
             setSelectedRideForBooking(null);
           }}
           onProceed={handleCoPassengerProceed}
+        />
+      )}
+
+      {selectedRideForDetails && (
+        <RideDetailsModal
+          ride={selectedRideForDetails}
+          onClose={() => setSelectedRideForDetails(null)}
+          onBook={handleBook}
         />
       )}
 

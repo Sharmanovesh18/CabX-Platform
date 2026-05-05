@@ -29,7 +29,7 @@ function ReviewPage() {
       return;
     }
     // POST to backend
-    axios.post('http://localhost:5000/api/reviews', newReview)
+    axios.post('http://localhost:5001/api/reviews', newReview)
       .then(res => {
         // refresh list with new review prepended
         fetchReviews();
@@ -44,7 +44,7 @@ function ReviewPage() {
 
   const fetchReviews = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/reviews');
+      const res = await axios.get('http://localhost:5001/api/reviews');
       if (res.data && res.data.reviews) setReviews(res.data.reviews);
     } catch (err) {
       console.error('Failed to load reviews', err);

@@ -1,0 +1,288 @@
+.ride-details-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  padding: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.ride-details-modal-content {
+  background: var(--surface);
+  width: 100%;
+  max-width: 900px;
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ride-details-header {
+  padding: 30px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: white;
+  position: relative;
+}
+
+.ride-details-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.ride-details-header p {
+  opacity: 0.9;
+  font-size: 0.9rem;
+}
+
+.ride-details-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ride-details-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.ride-details-body {
+  padding: 30px;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.ride-details-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ride-details-right {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.ride-details-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ride-details-section h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: var(--background);
+  border-radius: var(--radius-lg);
+}
+
+.route-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+
+.route-line {
+  width: 2px;
+  height: 20px;
+  background: var(--primary-light);
+  margin-left: 4px;
+}
+
+.real-time-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.stat-card {
+  padding: 20px;
+  background: var(--background);
+  border-radius: var(--radius-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary-light);
+}
+
+.stat-icon {
+  font-size: 1.5rem;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.driver-profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+}
+
+.driver-profile img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.driver-info h4 {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.driver-rating {
+  font-size: 0.85rem;
+  color: #854d0e;
+  background: #fef9c3;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+}
+
+.ride-details-footer {
+  padding: 20px 30px 30px;
+  display: flex;
+  gap: 15px;
+}
+
+.ride-details-footer button {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.book-now-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+}
+
+.book-now-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.cancel-btn {
+  background: var(--background);
+  color: var(--text-secondary);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.cancel-btn:hover {
+  background: #f1f5f9;
+}
+
+.route-map-container {
+  height: 100%;
+  flex: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.map-loading, .map-error {
+  width: 100%;
+  height: 200px;
+  background: #f1f5f9;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15px;
+  font-size: 0.85rem;
+  color: #64748b;
+  text-align: center;
+  padding: 20px;
+}
+
+.map-error {
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.map-error-text {
+  font-size: 0.75rem;
+  color: #ef4444;
+  margin-top: 8px;
+  text-align: center;
+}
+
+@media (max-width: 850px) {
+  .ride-details-modal-content {
+    max-width: 500px;
+  }
+  
+  .ride-details-body {
+    flex-direction: column;
+    max-height: 80vh;
+  }
+  
+  .ride-details-right {
+    min-height: 300px;
+  }
+}

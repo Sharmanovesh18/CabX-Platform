@@ -18,7 +18,7 @@ const CoPassengerModal = ({ ride, onClose, onProceed }) => {
     setLoading(true);
     try {
       // Fetch passengers who have booked the same route
-      const res = await axios.get(`http://localhost:5000/api/rides/${ride._id}/co-passengers`);
+      const res = await axios.get(`http://localhost:5001/api/rides/${ride._id}/co-passengers`);
       setCoPassengers(res.data.passengers || []);
     } catch (err) {
       console.error('Error fetching co-passengers:', err);

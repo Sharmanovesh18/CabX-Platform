@@ -1,56 +1,30 @@
-/* DashBoard.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-  --bg-color: #000000;
-  --card-bg: #161616;
-  --card-hover: #1c1c1c;
-  --text-primary: #ffffff;
-  --text-secondary: #a0a0a0;
-  --accent-color: #276ef1;
-  /* Uber-like blue or generic premium blue */
-  --accent-hover: #1f5edc;
-  --border-color: #333333;
-  --success-color: #2ea043;
-  --input-bg: #2b2b2b;
-}
-
-/* Body style removed to prevent global pollution. Background handled by #dashboard-container */
+/* DashBoard.css - Modern Professional Light Mode Redesign */
 
 #dashboard-container {
   width: 100%;
   min-height: 100vh;
-  background: var(--bg-gradient);
-  padding-bottom: 40px;
-  /* Ensure it covers the full screen even if content is short */
+  background-color: var(--background);
+  padding-top: 100px; /* Offset for fixed navbar */
+  padding-bottom: 60px;
   display: flex;
   flex-direction: column;
 }
 
 #dashboard-content {
   width: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0 24px;
   flex: 1;
-  /* background: linear-gradient(135deg, #a8c0ff 0%, #b8d4ff 100%); */
-  border: 2px solid rgba(255, 255, 255, 0.5);
-}
-
-.ride-card-gradient {
-  /* background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 25%, #fd79a8 50%, #a29bfe 75%, #fdcb6e 100%); */
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-
 }
 
 .page-title {
-  font-family: 'Inter', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin-bottom: 24px;
-  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 32px;
+  letter-spacing: -0.025em;
 }
 
 /* --- Search / Form Controls --- */
@@ -58,207 +32,159 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-
-  gap: 12px;
-  background-color: var(--card-bg);
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  margin-bottom: 30px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  gap: 16px;
+  background-color: var(--surface);
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 40px;
+  box-shadow: var(--shadow-lg);
 }
 
 .dashboard-form-controls input.inputText {
-
-  margin-bottom: 20px;
-  padding: 20px;
-  /* background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 50%, #fce4ec 100%); */
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.6);
-}
-
-.dashboard-form-controls input {
-  padding: 12px;
-  border: 2px solid #a8c0ff;
-  border-radius: 4px;
-  font-size: 16px;
   flex: 1 1 200px;
-  background-color: var(--input-bg) !important;
-  color: var(--text-primary) !important;
-  border: 1px solid var(--border-color);
-  padding: 14px 16px;
-  border-radius: 8px;
-  font-size: 15px;
-  font-family: 'Inter', sans-serif;
-  transition: border-color 0.2s;
-}
-
-.dashboard-form-controls input.inputText::placeholder {
-  color: #777;
+  padding: 14px 20px;
+  background-color: var(--background);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-family: var(--font-body);
+  color: var(--text-main);
+  transition: all 0.2s ease;
 }
 
 .dashboard-form-controls input.inputText:focus {
   outline: none;
-  border-color: var(--accent-color);
-}
-
-/* Force dark calendar/clock picker on supported browsers */
-.dashboard-form-controls input[type="date"],
-.dashboard-form-controls input[type="time"] {
-  color-scheme: dark;
-}.dashboard-form-controls button {
-  padding: 12px;
-  border-radius: 4px;
-  font-size: 16px;
-  flex: 1 1 200px;
-}
-
-.dashboard-form-controls button {
-  /* background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%); */
-  color: white;
-  border: 2px solid rgba(255, 255, 255, 0.8);
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.dashboard-form-controls button:hover {
-  /* background: linear-gradient(135deg, #fdcb6e 0%, #e17055 100%); */
-  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--primary-light);
+  background-color: var(--surface);
 }
 
 .swap-icon {
-  color: var(--text-secondary);
-  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-radius: var(--radius-full);
   cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
-  transition: background 0.2s, color 0.2s;
+  font-size: 1.25rem;
+  transition: all 0.2s ease;
 }
 
 .swap-icon:hover {
-  background-color: #333;
-  color: var(--text-primary);
-}
-.ride-details {
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 16px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  border: 2px solid rgba(255, 255, 255, 0.6);
+  transform: rotate(180deg);
+  background-color: var(--primary);
+  color: var(--white);
 }
 
-.dashboard-form-controls button,
-.primary-btn {
-  background-color: var(--accent-color);
-  color: #fff;
+.dashboard-form-controls button {
+  background-color: var(--primary);
+  color: var(--white);
   border: none;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 14px 32px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 15px;
-  transition: background-color 0.2s;
+  transition: all 0.2s ease;
   flex: 0 0 auto;
 }
 
-.dashboard-form-controls button:hover,
-.primary-btn:hover {
-  background-color: var(--accent-hover);
+.dashboard-form-controls button:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
+/* --- Alerts --- */
 .alert {
-  padding: 12px 16px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-size: 14px;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  margin-bottom: 24px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .alert-info {
-  background-color: rgba(39, 110, 241, 0.15);
-  color: #5aa0ff;
-  border: 1px solid rgba(39, 110, 241, 0.3);
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 .alert-error {
-  background-color: rgba(255, 77, 79, 0.1);
-  color: #ff4d4f;
-  border: 1px solid rgba(255, 77, 79, 0.3);
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid rgba(185, 28, 28, 0.2);
 }
 
 /* --- History Button --- */
 .history-button-container {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .history-btn {
-  background-color: transparent;
+  background-color: var(--surface);
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .history-btn:hover {
-  background-color: var(--card-hover);
-  color: var(--text-primary);
-  border-color: var(--text-secondary);
+  background-color: var(--background);
+  color: var(--primary);
+  border-color: var(--primary);
 }
 
 /* --- Ride Details & List --- */
-.ride-details {
-  /* Removed container styling to let cards sit directly on background or minimal container */
-  padding: 0;
-}
-
 .ride-details h2 {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 20px;
 }
 
 .loading-text {
   color: var(--text-secondary);
-  font-style: italic;
-  padding: 20px;
   text-align: center;
+  padding: 40px;
+  font-size: 1.1rem;
 }
 
 /* --- Ride Cards --- */
 .ride-card {
-  background-color: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  background-color: var(--surface);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-/* Override the gradient class to keep it dark/clean or subtle gradient if preferred. 
-   User asked for "different color like uber", usually implies solid dark or very subtle.
-   I'll make it a very subtle dark gradient for "Ride" feel. */
-.ride-card-gradient {
-  background: linear-gradient(145deg, rgba(29, 39, 58, 0.8), rgba(20, 27, 43, 0.9));
-  margin-bottom: 15px;
-  transition: transform 0.2s;
-  border: 2px solid #a8c0ff;
+  gap: 20px;
 }
 
 .ride-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  border-color: #444;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--primary-light);
+}
+
+.ride-card-gradient {
+  background: linear-gradient(to bottom right, var(--surface), #f0f7ff);
 }
 
 .ride-top-row {
@@ -268,32 +194,36 @@
 }
 
 .ride-time-main {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  font-family: var(--font-heading);
 }
 
 .ride-duration {
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: var(--text-secondary);
-  font-size: 13px;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .ride-line {
   height: 2px;
-  width: 40px;
-  background-color: #444;
-  border-radius: 1px;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, var(--primary-light), transparent);
 }
 
 .ride-locations {
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 15px;
-  color: var(--text-secondary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-main);
 }
 
 .ride-info-row {
@@ -303,46 +233,31 @@
   color: var(--text-secondary);
 }
 
-
-.driver-avatar img,
-.avatar-blank {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--border-color);
-}
 .driver-avatar img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
   object-fit: cover;
-  border: 2px solid #007bff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.driver-avatar img:hover {
-  transform: scale(1.1);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.avatar-blank {
-  background-color: #333;
+  border: 2px solid var(--white);
+  box-shadow: var(--shadow-sm);
 }
 
 .driver-name {
-  color: var(--text-primary);
-  font-weight: 500;
+  color: var(--text-main);
+  font-weight: 600;
+  font-size: 1rem;
 }
 
 .driver-rating {
-  background: #333;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #fbbf24;
-  /* Star color */
+  background: #fef9c3;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #854d0e;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Bottom Row & Actions */
@@ -350,15 +265,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid var(--border-color);
-  padding-top: 16px;
-  margin-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  padding-top: 20px;
 }
 
 .ride-fare {
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-primary);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: var(--font-heading);
 }
 
 .booking-options {
@@ -368,160 +283,150 @@
 }
 
 .booking-type {
-  background-color: rgba(39, 110, 241, 0.15);
-  color: #5aa0ff;
-  font-size: 12px;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 600;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-size: 0.75rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .ride-bottom-row button {
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 12px 28px;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.9375rem;
   cursor: pointer;
   border: none;
-  font-size: 14px;
-  transition: opacity 0.2s;
+  transition: all 0.2s ease;
 }
 
 .ride-bottom-row button:first-of-type {
-  background-color: var(--accent-color);
-  /* Primary Action */
-  color: #fff;
+  background-color: var(--primary);
+  color: var(--white);
+  box-shadow: var(--shadow-md);
 }
 
-.ride-bottom-row button:first-of-type:hover:not(:disabled) {
-  opacity: 0.9;
+.ride-bottom-row button:first-of-type:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
 }
 
 .ride-bottom-row button:disabled {
-  background-color: #333;
-  color: #666;
+  background-color: var(--background);
+  color: var(--text-muted);
   cursor: not-allowed;
+  box-shadow: none;
 }
 
-/* --- Modals & Popups --- */
-.modal,
-.popup-modal,
-.share-modal {
+/* --- Modals --- */
+.modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.85);
-  /* Darker overlay */
-  backdrop-filter: blur(4px);
-  z-index: 1000;
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  padding: 24px;
 }
 
 .history-content,
 .popup-content,
 .share-content {
   position: relative;
-  max-width: 600px;
-  width: 90%;
+  max-width: 560px;
+  width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  background-color: #1e1e1e;
-  /* Dark modal bg */
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
-  border-radius: 12px;
-  padding: 24px;
+  background-color: var(--surface);
+  color: var(--text-main);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  box-shadow: var(--shadow-xl);
 }
 
 .close-btn {
   position: absolute;
-  color: var(--text-secondary);
-  top: 16px;
-  right: 16px;
-  background: none;
-  border: none;
-  font-size: 32px;
-  cursor: pointer;
-  transition: color 0.2s;
-  z-index: 10;
+  top: 20px;
+  right: 20px;
+  color: var(--text-muted);
+  font-size: 2rem;
+  line-height: 1;
+  transition: color 0.2s ease;
 }
 
 .close-btn:hover {
-  color: #fff;
+  color: var(--text-main);
 }
 
-.history-card,
-.share-layout {
-  border-bottom: 1px solid var(--border-color);
+.history-card {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .history-card:last-child {
   border-bottom: none;
 }
 
-.share-layout h4 {
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+.popup-body {
+  margin: 24px 0;
 }
 
-/* Popup specific styling to Ensure standard colors */
 .popup-body div {
-  margin-bottom: 8px;
+  margin-bottom: 12px;
   color: var(--text-secondary);
+  font-size: 1rem;
 }
 
 .popup-body b {
-  color: var(--text-primary);
+  color: var(--text-main);
+  width: 100px;
+  display: inline-block;
 }
 
 .popup-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.popup-actions button {
-  background-color: var(--accent-color);
-  color: #fff;
+  gap: 16px;
+  margin-top: 32px;
 }
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
-  .dashboard-form-controls {
-    flex-direction: column;
-    align-items: stretch;
+  #dashboard-container {
+    padding-top: 80px;
   }
 
-  .dashboard-form-controls input.inputText,
-  .dashboard-form-controls button {
+  .dashboard-form-controls {
+    flex-direction: column;
+    padding: 24px;
+  }
+
+  .dashboard-form-controls input.inputText {
     width: 100%;
-    flex: none;
   }
 
   .swap-icon {
-    align-self: center;
     transform: rotate(90deg);
   }
 
   .ride-bottom-row {
     flex-direction: column;
-    gap: 16px;
-    align-items: flex-start;
+    gap: 20px;
+    align-items: stretch;
   }
 
-  .ride-bottom-row button {
-    width: 100%;
+  .ride-fare {
+    text-align: center;
   }
 
   .booking-options {
-    width: 100%;
-    justify-content: space-between;
+    flex-direction: column;
   }
 }

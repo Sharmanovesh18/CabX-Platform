@@ -18,37 +18,23 @@ const DiscountCtaStyles = () => (
     <style>{`
         .discount-section-wrapper {
             padding: 0 5%;
-            margin: 6rem auto;
+            margin: 4rem auto;
         }
 
         .discount-section {
-            background: linear-gradient(110deg, #4F46E5, #818CF8, #4F46E5);
-            background-size: 600% 600%;
-            color: #FFFFFF;
-            padding: 3rem 4rem;
-            max-width: 1800px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: var(--white);
+            padding: 4rem;
+            max-width: 1200px;
             margin: 0 auto;
-            border-radius: 20px;
+            border-radius: var(--radius-xl);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: left;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.5);
-            animation: pulse-glow 4s infinite ease-in-out, animated-gradient 10s ease infinite;
-        }
-        
-        @keyframes animated-gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes pulse-glow {
-            0% { box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.5); }
-            50% { box-shadow: 0 20px 50px -10px rgba(129, 140, 248, 0.7); }
-            100% { box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.5); }
+            box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.3);
         }
 
         .discount-content {
@@ -58,11 +44,11 @@ const DiscountCtaStyles = () => (
              display: flex;
              justify-content: space-between;
              align-items: center;
-             gap: 3rem;
+             gap: 4rem;
         }
         
         .discount-text-column {
-            flex-basis: 60%;
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -72,109 +58,127 @@ const DiscountCtaStyles = () => (
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 600;
             margin-bottom: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .discount-text-column h2 {
-            font-size: clamp(2.2rem, 5vw, 3.5rem);
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1rem;
-            text-align: left;
+            font-family: var(--font-heading);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
         }
 
         .discount-text-column p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.8);
-            max-width: 500px;
-            margin: 0 0 2rem 0;
-            text-align: left;
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 480px;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
         }
 
         .discount-timer-column {
-            flex-basis: 40%;
+            flex: 0 0 auto;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.15);
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
         
         .timer-title {
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.125rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-            opacity: 0.9;
-            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .countdown-timer {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
         }
 
         .timer-box {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 0.8rem;
-            border-radius: 12px;
-            width: 80px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            width: 90px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
 
         .timer-number {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.25rem;
+            font-weight: 800;
             display: block;
             line-height: 1;
+            font-family: var(--font-heading);
         }
 
         .timer-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            opacity: 0.7;
+            font-weight: 600;
+            margin-top: 4px;
+            opacity: 0.8;
             display: block;
         }
         
         .timer-separator {
             font-size: 2rem;
             font-weight: 700;
-            color: rgba(255, 255, 255, 0.5);
-            align-self: center;
+            opacity: 0.5;
             padding-bottom: 1.5rem;
         }
 
         .discount-button {
-            background-color: #FFFFFF;
-            color: #635dc5ff;
+            background-color: var(--white);
+            color: var(--primary);
             border: none;
-            padding: 1rem 2.5rem;
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 1.25rem 3rem;
+            border-radius: var(--radius-md);
+            font-size: 1.125rem;
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            position: relative;
-            z-index: 2;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
         }
 
         .discount-button:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            background-color: var(--background);
+        }
+
+        @media (max-width: 1024px) {
+            .discount-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 3rem;
+            }
+            .discount-text-column {
+                align-items: center;
+            }
+            .discount-text-column p {
+                margin-left: auto;
+                margin-right: auto;
+            }
         }
         
         .confetti-container {
